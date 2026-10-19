@@ -8,7 +8,10 @@ executable or the already-published release asset.
 > This is an ADB-dependent technical preview. Normal APK installation through
 > the Android File Manager is not supported. Do not install the unpatched
 > original APK. Patch it on the PC, install the generated APK with ADB, and
-> transfer the Garmin data before launching StreetPilot.
+> **Do not launch StreetPilot until the entire Garmin data folder has been
+> copied to ApplePie and a final `adb push --sync` pass reports zero files
+> needing transfer.** Maps and the supplied Chinese language/voice resources
+> must be in place before the first launch.
 
 ## 1. Requirements and limitations
 
@@ -332,7 +335,9 @@ $garminRemote = "$filesRemote/Garmin"
 
 & $adb -s $serial shell am force-stop $pkg
 & $adb -s $serial shell mkdir -p $filesRemote
-& $adb -s $serial push $garminLocal "$filesRemote/"
+& $adb -s $serial push --sync $garminLocal "$filesRemote/"
+if ($LASTEXITCODE -ne 0) { throw 'Data transfer failed. Stop and resolve the error before launching StreetPilot.' }
+& $adb -s $serial shell sync
 ```
 
 Push the **top-level Garmin folder into the parent `files` directory**. Do not
@@ -343,7 +348,46 @@ Wait for ADB to report a completed transfer without errors. A large map archive
 can take a long time over Wi-Fi. Do not disconnect, sleep the PC, or power off
 the device mid-transfer.
 
-Verify the result:
+### Repeat sync until no files remain to be copied
+
+**A transfer that displays no errors is not sufficient evidence of a complete
+copy.** During testing, an incomplete copy prevented successful startup in
+Chinese even though no transfer errors were displayed. Chinese startup
+succeeded after repeated synchronization completed the dataset.
+
+Keep StreetPilot stopped. After the first pass finishes, run the same command
+again against the same PC source and ApplePie destination:
+
+```powershell
+& $adb -s $serial push --sync $garminLocal "$filesRemote/"
+if ($LASTEXITCODE -ne 0) { throw 'Data sync failed. Do not launch StreetPilot yet.' }
+& $adb -s $serial shell sync
+```
+
+Use **`push --sync` with two hyphens**. It checks the source files against the
+device and resends missing files and files whose size or timestamp differs,
+including truncated copies. Files already matching those checks are skipped.
+The separate `shell sync` command flushes pending filesystem writes; it does
+not perform the PC-to-device comparison.
+
+Repeat the pass until it finishes successfully and its transfer summary reports
+**0 files pushed**, with existing files skipped. If it still transfers files,
+let it finish and repeat. There is no fixed required number of passes. Do not
+launch the application between passes, since the app can modify its own data.
+
+If the same files are resent on every pass, stop and check the connection,
+available storage, and whether the device is preserving file timestamps. Do not
+treat a repeatedly unsuccessful or inconclusive sync as complete. This is a
+size/timestamp check, not a test of every file's byte contents; per-file SHA-256
+verification is not required by this guide.
+
+**Copy the whole Garmin dataset, not only the `.img` map files.** Include
+`.System`, `Text`, `Voice`, and any other language/font resources supplied in
+your source. The local PC dataset must itself be fully extracted and contain
+the required Chinese resources; repeating sync cannot supply a missing source
+file.
+
+After the final pass reports zero files to copy, verify the placement:
 
 ```powershell
 & $adb -s $serial shell ls -la $garminRemote
@@ -352,7 +396,8 @@ Verify the result:
 
 The first listing should show the extracted top-level resources; the second
 should show the map files you intended to transfer. A directory listing verifies
-placement, not complete byte-for-byte integrity of every transferred file.
+placement. Use the final zero-transfer `--sync` pass above as the completion
+check; seeing filenames in this listing alone is not enough.
 
 These locations are wrong for this preview:
 
@@ -366,7 +411,39 @@ Vendor storage policies can differ and require a device-specific solution.
 
 ## 9. First launch and basic checks
 
-After confirming **both** a successful install and the correct data layout:
+### Optional: change an English ApplePie to Traditional Chinese
+
+For an English-language ApplePie, the reported locale-setting command is:
+
+```text
+adb shell settings put system system_locales zh-Hant-TW
+```
+
+In the existing PowerShell session, target the selected device explicitly.
+First display and record the existing value if you want to retain it for later,
+then apply Traditional Chinese:
+
+```powershell
+& $adb -s $serial shell settings get system system_locales
+& $adb -s $serial shell settings put system system_locales zh-Hant-TW
+```
+
+This changes the device's system locale, not just StreetPilot. If the firmware
+does not apply the language immediately, use its normal restart procedure only
+after all transfers have finished. Reconnect ADB afterwards if necessary; the
+wireless debugging port may change. The command does not download or repair
+Chinese resources, so complete the Garmin data synchronization first.
+
+### Launch only after the data synchronization is complete
+
+Before opening StreetPilot, confirm all three conditions:
+
+- APK installation reported **Success**.
+- The Garmin data is in the correct location, including maps and the supplied
+  language/voice resources.
+- A final `adb push --sync` pass finished successfully with **0 files pushed**.
+
+Only then:
 
 1. Open StreetPilot from the ApplePie launcher.
 2. Read any Android warning or permission prompt. Approve only permissions you
@@ -377,10 +454,17 @@ After confirming **both** a successful install and the correct data layout:
    not by itself an application failure.
 5. While parked, check map display, location updates, route calculation, and
    spoken guidance.
-6. If you use media playback, test whether guidance lowers media volume as
-   expected. Test Android/Google voice input separately if that service is
-   available on your device; it can require its own permissions, language
-   setup, and connectivity.
+6. Play media in another app and trigger a navigation announcement. Guidance
+   should temporarily lower the media volume rather than occupy the main media
+   channel for the whole navigation session.
+7. Use StreetPilot's Mute control. It should mute StreetPilot's guidance while
+   other media keep playing, avoiding the whole-media mute behavior experienced
+   with the original APK in VMOS Pro.
+8. In the destination/search input field, use Google voice input if the service
+   is available. After recognition fills in the text, **press Enter** to submit
+   the destination search. Voice recognition alone is not the final action.
+   Google's speech service may require permissions, language setup, and network
+   connectivity.
 
 If Android still refuses to open the app after a successful ADB installation,
 capture the exact wording and device build information. Do not assume that
@@ -411,7 +495,9 @@ change after rebooting or toggling debugging.
 | `INSTALL_FAILED_UPDATE_INCOMPATIBLE` | Existing and generated apps have incompatible signers. Preserve data before planning a reinstall. |
 | `INSTALL_FAILED_NO_MATCHING_ABIS` | Check ARM32 userspace support; this patcher is not an ARM64 conversion. |
 | `INSTALL_FAILED_INSUFFICIENT_STORAGE` or an incomplete push | Check device free space and archive sizes. Do not delete unrelated data automatically. |
-| Data files cannot be found, or languages/maps are missing | Confirm extraction, `.System`, `Text`, and `Voice` placement. Check for an extra archive wrapper or `Garmin/Garmin` level. |
+| Copy showed no errors but StreetPilot fails to start in Chinese | Keep the app stopped and repeat `adb push --sync` until a successful pass reports 0 files pushed. Confirm that the PC source includes the Chinese language/voice resources and that they are in the correct location. |
+| Data files cannot be found, or languages/maps are missing | Confirm extraction, `.System`, `Text`, and `Voice` placement. Check for an extra archive wrapper or `Garmin/Garmin` level, and complete the repeated sync procedure before launching. |
+| Voice input fills the destination field but nothing happens | Press Enter after Google finishes recognizing the destination text. |
 | `Permission denied` under Android/data | Preserve the exact failing command/path and request device-specific help; do not apply broad ownership/permission changes. |
 | Blank screen, crash, or Android launch restriction | Report the model, Android/build version, install result, and sanitized error/log. Compatibility is not guaranteed on untested hardware. |
 
@@ -440,6 +526,8 @@ private keys, activation material, maps, original APKs, or patched APKs.
 
 - [Android SDK Platform Tools](https://developer.android.com/tools/releases/platform-tools)
 - [Android Debug Bridge: wireless pairing, targeted commands, and transfers](https://developer.android.com/tools/adb)
+- [ADB source: `push --sync` command syntax](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/client/commandline.cpp)
+- [ADB source: directory sync size/timestamp comparisons](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main-16k/client/file_sync_client.cpp)
 - [Android 14: minimum installable target API and the testing install flag](https://developer.android.com/about/versions/14/behavior-changes-all#minimum-target-api-level)
 - [Patcher license](../LICENSE)
 

@@ -25,6 +25,15 @@ compatibility: the v0.9.0 patcher requires the exact source SHA-256 documented
 in the installation guide. Do not install the original APK directly; patch it
 on the PC first.
 
+> [!WARNING]
+> **Do not launch StreetPilot until the entire Garmin data folder has been
+> copied to ApplePie and a final `adb push --sync` pass reports zero files
+> needing transfer.** Include the maps, hidden `.System` folder, and supplied
+> language/voice resources. An incomplete copy has been observed without
+> displayed transfer errors and prevented successful startup in Chinese until
+> the data was synchronized again. See the installation guide for the repeat
+> sync procedure.
+
 ## Project status
 
 The project is being released in stages.
@@ -54,6 +63,33 @@ The patcher is designed to:
 
 Exact supported APK hashes, device requirements, patch behavior, and
 installation steps are documented in each release's notes and included guide.
+
+## Features of the patched application
+
+The following behavior has been reported on the tested ApplePie setup:
+
+- **Satellite signals:** StreetPilot can display native GNSS/satellite signal
+  information.
+- **Media playback during navigation:** announcements temporarily lower the
+  current media volume (audio ducking), allowing navigation guidance alongside
+  media playback.
+- **StreetPilot-only mute:** StreetPilot's Mute control silences its guidance
+  while other media continue playing.
+- **Google voice input:** use Google speech recognition to enter text into the
+  destination/search field, then **press Enter** to submit it. Recognizing the
+  words is not the final search action.
+
+For an English-language ApplePie, the reported command for switching the device
+to Traditional Chinese is:
+
+```text
+adb shell settings put system system_locales zh-Hant-TW
+```
+
+This changes the ApplePie's system locale, not just StreetPilot's language. The
+[installation guide](docs/TECH_PREVIEW_INSTALL.md) gives the PowerShell command
+for a selected device. Chinese map/language resources must still be supplied and
+fully synchronized before first launch.
 
 ## What this project does not provide
 
@@ -121,7 +157,8 @@ not add ARM32 support to a 64-bit-only Android installation.
 
 Follow the [v0.9.0 installation guide](docs/TECH_PREVIEW_INSTALL.md) for source
 APK checks, third-party data preparation, wireless ADB pairing, installation,
-data transfer, launch checks, and troubleshooting. The original README inside
+repeated `--sync` data transfer, first-launch checks, Traditional Chinese setup,
+and troubleshooting. The original README inside
 the ZIP remains useful; this online guide supplies additional detail. Commands
 and file locations may change in later releases.
 
