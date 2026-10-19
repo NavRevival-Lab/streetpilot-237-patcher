@@ -59,13 +59,19 @@ The internal `SHA256SUMS.txt` lists the executable's hash. It is not a checksum
 of the outer ZIP. The ZIP checksum is provided below and in the
 [separate checksum file](../checksums/StreetPilot_ApplePie_Patcher_TechPreview_release_v0.9.0.zip.sha256).
 
-### Original application and data: external MediaFire folder
+### Original application and data: third-party community references
 
-The project maintainer supplied this folder link for the original materials:
+For references to original application/data materials, consult this Mobile01
+discussion started by user **k-gg**:
 
-[MediaFire: Garmin folder](https://www.mediafire.com/folder/nbl3er5zopqie/Garmin)
+[Mobile01: StreetPilot 2.37 community discussion](https://www.mobile01.com/topicdetail.php?f=228&t=6715746)
 
-Look for the supported original APK named
+Read the discussion and locate its MediaFire download link yourself.
+**NavRevival-Lab does not host, maintain, or control the external files or
+download links.** The thread attribution identifies who started the discussion;
+it does not establish who owns or maintains any linked download folder.
+
+Using the references in that discussion, look for the supported original APK named
 `StreetPilot_2.37(2019.10.23).apk` and the archives holding the Garmin data.
 Download only materials you are authorized to use. Download all required parts
 if an archive is split into multiple volumes, then extract with a tool that
@@ -73,15 +79,16 @@ supports that archive format. The v0.9.0 patcher itself must still come from
 GitHub, not a third-party copy.
 
 > [!NOTE]
-> The MediaFire folder's current file listing could not be independently
-> verified when this guide was prepared. Contents and filenames may change,
-> and the link may become unavailable. Treat the APK name above as the
+> The external file listings could not be independently verified when this
+> guide was prepared. Third-party links, contents, and filenames may change,
+> and downloads may become unavailable. Treat the APK name above as the
 > required input name, not a guarantee that it is currently present. Verify
 > the actual APK hash below. If the required file or a complete archive is
 > missing, stop and report that problem; do not substitute a different APK.
 
-This link is not an official Garmin distribution channel. Availability at an
-external URL is not proof of permission to use or redistribute the files. The
+The forum discussion and third-party download links are not official Garmin
+distribution channels. Availability at an external URL is not proof of
+permission to use or redistribute the files. The
 project's license does not license the original APK, maps, voices, activation
 material, or other third-party content. Do not bypass activation or use another
 device's identity/registration material.
@@ -170,8 +177,8 @@ source-hash check; do not edit or rename other binaries to bypass validation.
 
 ## 5. Extract and normalize the Garmin data layout
 
-Extract the data archives downloaded from MediaFire on the PC. An archive may
-wrap its contents in extra directories such as `Android`, `data`,
+Extract the data archives obtained through the community references on the PC.
+An archive may wrap its contents in extra directories such as `Android`, `data`,
 `com.garmin.android.apps.gmobilext`, or `files`. Locate the **actual Garmin
 folder**, not just the outer archive folder.
 

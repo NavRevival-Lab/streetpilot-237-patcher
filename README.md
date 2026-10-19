@@ -12,15 +12,18 @@ selected newer Android devices.
 - Download the patcher from [GitHub Releases](https://github.com/NavRevival-Lab/streetpilot-237-patcher/releases).
 - For **Tech Preview v0.9.0**, follow the
   [detailed Windows/ADB installation guide](docs/TECH_PREVIEW_INSTALL.md).
-- Original application/data materials are referenced through the
-  [maintainer-provided MediaFire folder](https://www.mediafire.com/folder/nbl3er5zopqie/Garmin).
-  This is an external source, not a patcher download or an official Garmin
-  distribution channel. Use only materials you have the right to use.
+- For references to original application/data materials, consult the
+  [Mobile01 discussion started by user **k-gg**](https://www.mobile01.com/topicdetail.php?f=228&t=6715746)
+  and locate the MediaFire download link in that discussion yourself.
+  **NavRevival-Lab does not host, maintain, or control those external files or
+  download links.** Use only materials you have the right to use.
 
-The MediaFire folder's contents and availability can change. A filename alone
-does not establish APK compatibility: the v0.9.0 patcher requires the exact
-source SHA-256 documented in the installation guide. Do not install the
-original APK directly; patch it on the PC first.
+The forum discussion and its third-party download links are not official
+Garmin distribution channels. Their contents and availability can change and
+are not verified by this project. A filename alone does not establish APK
+compatibility: the v0.9.0 patcher requires the exact source SHA-256 documented
+in the installation guide. Do not install the original APK directly; patch it
+on the PC first.
 
 ## Project status
 
@@ -88,11 +91,10 @@ contain the repository files at the release tag, not the separately uploaded
 patcher. For v0.9.0, select
 `StreetPilot_ApplePie_Patcher_TechPreview_release_v0.9.0.zip` under Assets.
 
-Do not download repackaged patcher copies from third-party mirrors. The MediaFire
-link above is for external original materials, not an alternative patcher source.
-The license permits
-sharing a link to the official release page, but not redistributing the release
-files themselves.
+Do not download repackaged patcher copies from third-party mirrors. The Mobile01
+discussion is a reference for third-party original materials, not an alternative
+patcher source. The license permits sharing a link to the official release page,
+but not redistributing the release files themselves.
 
 ## Current Tech Preview requirements
 
@@ -118,7 +120,7 @@ release. The device must support **32-bit ARM applications**; the preview does
 not add ARM32 support to a 64-bit-only Android installation.
 
 Follow the [v0.9.0 installation guide](docs/TECH_PREVIEW_INSTALL.md) for source
-APK checks, MediaFire data preparation, wireless ADB pairing, installation,
+APK checks, third-party data preparation, wireless ADB pairing, installation,
 data transfer, launch checks, and troubleshooting. The original README inside
 the ZIP remains useful; this online guide supplies additional detail. Commands
 and file locations may change in later releases.
@@ -191,7 +193,7 @@ modification, sublicensing, or commercial distribution.
 
 The project license applies only to the project-owned material it covers. It
 does not grant any rights to Garmin software, maps, data, or trademarks, or to
-materials obtained through the external MediaFire link. Those materials remain
+materials obtained through third-party download links. Those materials remain
 subject to their respective owners' terms.
 
 ## Trademark notice
