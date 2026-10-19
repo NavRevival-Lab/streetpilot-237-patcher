@@ -7,6 +7,21 @@ selected newer Android devices.
 > This is an independent compatibility project. It is not affiliated with,
 > sponsored by, approved by, or endorsed by Garmin.
 
+## Start here
+
+- Download the patcher from [GitHub Releases](https://github.com/NavRevival-Lab/streetpilot-237-patcher/releases).
+- For **Tech Preview v0.9.0**, follow the
+  [detailed Windows/ADB installation guide](docs/TECH_PREVIEW_INSTALL.md).
+- Original application/data materials are referenced through the
+  [maintainer-provided MediaFire folder](https://www.mediafire.com/folder/nbl3er5zopqie/Garmin).
+  This is an external source, not a patcher download or an official Garmin
+  distribution channel. Use only materials you have the right to use.
+
+The MediaFire folder's contents and availability can change. A filename alone
+does not establish APK compatibility: the v0.9.0 patcher requires the exact
+source SHA-256 documented in the installation guide. Do not install the
+original APK directly; patch it on the PC first.
+
 ## Project status
 
 The project is being released in stages.
@@ -55,18 +70,27 @@ jurisdiction.
 ## Downloading a release
 
 Download the patcher only from this repository's
-[Releases](../../releases) page.
+[Releases](https://github.com/NavRevival-Lab/streetpilot-237-patcher/releases) page.
 
 For each release:
 
 1. Read the release notes and confirm that your device and source APK are
    supported.
-2. Download the release ZIP and its SHA-256 checksum file.
+2. Download the release ZIP and obtain its SHA-256 checksum from the release
+   assets or the version-specific installation guide. The v0.9.0 checksum file
+   is also available [in this repository](checksums/StreetPilot_ApplePie_Patcher_TechPreview_release_v0.9.0.zip.sha256).
 3. Verify the ZIP checksum before opening it.
 4. Extract the complete ZIP to a new folder.
 5. Read the included instructions before running any script or executable.
 
-Do not download repackaged copies from third-party mirrors. The license permits
+GitHub's automatic **Source code (zip)** and **Source code (tar.gz)** archives
+contain the repository files at the release tag, not the separately uploaded
+patcher. For v0.9.0, select
+`StreetPilot_ApplePie_Patcher_TechPreview_release_v0.9.0.zip` under Assets.
+
+Do not download repackaged patcher copies from third-party mirrors. The MediaFire
+link above is for external original materials, not an alternative patcher source.
+The license permits
 sharing a link to the official release page, but not redistributing the release
 files themselves.
 
@@ -88,8 +112,16 @@ data directories. The Tech Preview therefore uses ADB for installation and,
 when required, for transferring files to the correct application-owned
 location.
 
-Follow the instructions bundled with the particular release. Commands and file
-locations may change as compatibility work progresses.
+For v0.9.0, the package reports testing on **Exploter ApplePie AI-996B** only.
+Other ApplePie variants and non-ApplePie devices are not validated by this
+release. The device must support **32-bit ARM applications**; the preview does
+not add ARM32 support to a 64-bit-only Android installation.
+
+Follow the [v0.9.0 installation guide](docs/TECH_PREVIEW_INSTALL.md) for source
+APK checks, MediaFire data preparation, wireless ADB pairing, installation,
+data transfer, launch checks, and troubleshooting. The original README inside
+the ZIP remains useful; this online guide supplies additional detail. Commands
+and file locations may change in later releases.
 
 ## User-friendly releases in development
 
@@ -157,11 +189,14 @@ The current license permits personal, non-commercial testing and evaluation of
 an unmodified copy. It does not permit redistribution, mirroring, repackaging,
 modification, sublicensing, or commercial distribution.
 
-The project license applies only to material distributed by LegacyNavTools. It
-does not grant any rights to Garmin software, maps, data, or trademarks.
+The project license applies only to the project-owned material it covers. It
+does not grant any rights to Garmin software, maps, data, or trademarks, or to
+materials obtained through the external MediaFire link. Those materials remain
+subject to their respective owners' terms.
 
 ## Trademark notice
 
 Garmin and StreetPilot are trademarks of their respective owner. All other
 product names and trademarks belong to their respective owners. Their use here
 is solely to identify software compatibility.
+
